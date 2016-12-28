@@ -2,7 +2,7 @@ import socket
 import sys
 
 
-def main(local_port, remote_addr, remote_port):
+def main(local_port, remote_hostname, remote_port):
 
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -13,17 +13,25 @@ def main(local_port, remote_addr, remote_port):
 
     print('Listening\n')
 
+    remote_addr = socket.gethostbyname(remote_hostname)
+
     knownClient = None
     knownServer = (remote_addr, remote_port)
 
     while True:
-        data, addr = s.recvfrom(1500)
-        if knownClient is None:
+        print("Listen")
+        data, addr = s.recvfrom(65565)
+        print("received from " + str(addr))
+
+        if addr != knownServer:
             knownClient = addr
-        if addr == knownClient:
-            s.sendto(data, knownServer)
-        else:
+            print("set client to " + str(knownClient))
+        if addr == knownServer:
             s.sendto(data, knownClient)
+            print("  To server " + str((remote_addr, remote_port)))
+        else:
+            s.sendto(data, knownServer)
+            print("  To client " + str(knownClient))
 
 
 if __name__ == '__main__':
