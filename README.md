@@ -9,8 +9,8 @@ Always consult your colleagues about the current policies! It might be the case 
 this approach.
 
 Some ideas taken from:
-https://github.com/lat/ssh-fu/
-https://github.com/sshuttle/sshuttle
+* https://github.com/lat/ssh-fu/
+* https://github.com/sshuttle/sshuttle
 
 ## Use Case
 
@@ -30,8 +30,8 @@ to forward it using SSH-tunnel. This script automates:
 
 ## Usage:
 
-    ./kdc_proxy.py auto <local_kerberos_port>:<ssh_username@ssh_host>:<port on ssh host>:<kdc address>
+    ./kdc_relay.py auto <local_kerberos_port>:<ssh_username@ssh_host>:<port on ssh host>:<kdc address>
 
 ## Example
 
-    ./kdc_proxy.py auto 1088:vshulyak@our-internal-node-1.root.com:11088:kdc-server.root.com
+    ./kdc_relay.py auto 1088:vshulyak@our-internal-node-1.root.com:11088:kdc-server.root.com
