@@ -1,17 +1,37 @@
 # kdc_relay
 
-Adapted script based on kdc_tunnel
+A script to automate connections to Kerberos (KDC) from your local machine using SSH tunnel and UDP forwarding.
 
+Basically, it enables you to use kinit and kerberized apps on your localhost in case your KDC policies do not
+allow this. This could be useful for debugging of apps that use Kerberos.
 
-## Remote (should be running already):
+Always consult your colleagues about the current policies! It might be the case that you breach them if you use
+this approach.
 
-    python /share/kdc_relay.py remote 10088:host:88
+Some ideas taken from:
+https://github.com/lat/ssh-fu/
+https://github.com/sshuttle/sshuttle
 
-## Local:
+## Use Case
 
-    ssh -fN -o ExitOnForwardFailure=yes  -L 10088:localhost:10088 user@host
-    sudo python2.7 kdc_relay.py local 88:localhost:10088
+In many cases commands kinit/klist/etc. don't work on your local machine if your clusters' KDC is protected
+from external connections. So pointing to it directly doesn't work. And since Kerberos uses UDP it's not easy
+to forward it using SSH-tunnel. This script automates:
 
+* SSH Tunnel creation
+* UDP wrapping and unwrapping
+* Process cleanup
 
-See this for improvements:
-https://gist.github.com/scy/6781836 (to run ssh tunnel from python script)
+## Prerequisites
+
+* You need to set up KDC location in your realm to a port > 1024 so that the script doesn't require root permissions.
+(you can do it in /etc/krb5.conf)
+* Set up password-less login to a tunnel server
+
+## Usage:
+
+    ./kdc_proxy.py auto <local_kerberos_port>:<ssh_username@ssh_host>:<port on ssh host>:<kdc address>
+
+## Example
+
+    ./kdc_proxy.py auto 1088:vshulyak@our-internal-node-1.root.com:11088:kdc-server.root.com
